@@ -7,9 +7,9 @@ import aiohttp
 
 okx = ccxt.okx({
     'enboleRateLimit': False,
-    'apiKey': '43a9b1aa-b840-45c5-86e5-a221988a922d',
-    'secret': 'B8C400F21BA6999F02A7CFDF9F80C7F3',
-    'password': 'CODDICODDICODi1!'
+    'apiKey': '',
+    'secret': '',
+    'password': ''
 })
 
 def create_okx_market_order(symbol, amount, side):
@@ -21,11 +21,6 @@ def create_okx_market_order(symbol, amount, side):
     except Exception as e:
         print('Order failed', e)
         return 0
-    # if side == 'buy':
-    #     return order['info']['executedQty']
-    # if side == 'sell':
-    #     return order['info']['cummulativeQuoteQty']
-
 
 def create_okx_limit_order(symbol, price, amount, side):
     type = 'limit'
@@ -35,21 +30,9 @@ def create_okx_limit_order(symbol, price, amount, side):
 
 def create_okx_FOKorder(symbol, side, price, amount):
     print('Данные получены: ',symbol, price, amount, side)
-    
     type = 'limit'
     order = okx.create_order(symbol, type, side, amount, price, {'timeInForce': 'FOK'})
     print(order)
-
-    # if order['status'] == 'FILLED':
-    #     if side == 'buy':
-    #         return order['info']['executedQty']
-    #     if side == 'sell':
-    #         return order['info']['cummulativeQuoteQty']
-    # else:
-    #     return 'CANCEL'
-
-
-
 
 def start_load(data):
     while True:
@@ -72,8 +55,6 @@ def start_load(data):
             else:
                 break
 
-
-
 start_program = time.time()
 
 def time_start():
@@ -94,7 +75,6 @@ async def place_orders_async(orders):
     }
 
     async def place_order(session, order):
-        # await asyncio.sleep(0.04)
         try:
             query_string = "&".join([f"{key}={order[key]}" for key in order])
             signature = hmac.new(api_secret.encode("utf-8"), query_string.encode("utf-8"), hashlib.sha256).hexdigest()
@@ -105,7 +85,6 @@ async def place_orders_async(orders):
             async with session.post(base_url, params=order, headers=headers) as response:
                 response_json = await response.json()
                 if response.status == 200:
-                    # print(f"Order placed successfully: {response_json}")
                     pass
                 else:
                     print(f"Error placing order: {response_json}")
