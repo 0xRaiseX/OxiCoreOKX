@@ -147,13 +147,13 @@ async def websocket_connect_data():
                 }
             ]
         }
-        secret_key = 'B8C400F21BA6999F02A7CFDF9F80C7F3'
+        secret_key = ''
         login = {
             "op": "login",
             "args": [
                 {
-                    "apiKey": "43a9b1aa-b840-45c5-86e5-a221988a922d",
-                    "passphrase": "CODDICODDICODi1!",
+                    "apiKey": "",
+                    "passphrase": "",
                     "timestamp": str(int(time.time())),
                     "sign": generate_signature(secret_key, time.time(), 'GET', '/users/self/verify')
                 }
@@ -204,52 +204,3 @@ async def main(queue):
 
 def start_process_data(queue):
     asyncio.run(main(queue))
-
-
-
-
-# async def authenticate_and_subscribe(api_key, secret_key, passphrase):
-#     # Устанавливаем URL для WebSocket и URL для REST API биржи OKX
-#     ws_url = "wss://ws.okx.com:8443/ws/v5/private"
-#     rest_api_url = "https://www.okx.com/api/v5/"
-
-#     # Создаем WebSocket соединение
-#     async with websockets.connect(ws_url) as websocket:
-#         # Определяем параметры для аутентификации
-#         timestamp = str(int(time.time()))
-#         method = "GET"
-#         request_path = "/users/self/verify"
-#         string_to_sign = f"{timestamp}{method}{request_path}"
-
-#         # Создаем подпись для аутентификации
-#         signature = generate_signature(secret_key, string_to_sign)
-
-#         # Формируем HTTP запрос для аутентификации
-#         headers = {
-#             "OK-ACCESS-KEY": api_key,
-#             "OK-ACCESS-SIGN": signature,
-#             "OK-ACCESS-TIMESTAMP": timestamp,
-#             "OK-ACCESS-PASSPHRASE": passphrase
-#         }
-#         response = requests.get(rest_api_url + request_path, headers=headers)
-#         print(response.text)
-#         if response.status_code == 200:
-#             print("Аутентификация прошла успешно")
-#             # Подписываемся на канал данных о выставленных ордерах
-#             await websocket.send(json.dumps({"op": "subscribe", "args": ["spot/order:BTC-USDT"]}))
-#             async for message in websocket:
-#                 print(f"Получено сообщение: {message}")
-#         else:
-#             print("Ошибка при аутентификации")
-
-# # Функция для генерации подписи
-# def generate_signature(secret_key, data):
-#     secret_key_bytes = bytes(secret_key, 'utf-8')
-#     signature = base64.b64encode(hmac.new(secret_key_bytes, data.encode('utf-8'), hashlib.sha256).digest()).decode('utf-8')
-#     return signature
-
-# api_key = "43a9b1aa-b840-45c5-86e5-a221988a922d"
-# secret_key = "B8C400F21BA6999F02A7CFDF9F80C7F3"
-# passphrase = "CODDICODDICODi1!"
-
-# asyncio.get_event_loop().run_until_complete(authenticate_and_subscribe(api_key, secret_key, passphrase))
